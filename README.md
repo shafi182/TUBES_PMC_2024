@@ -15,24 +15,24 @@
 - Integrasi semua function : obi [DL ?? juni]
 
 Struct dataPasien
-	  Nama
-	  Alamat
-	  Kota
-	  Tempat lahir
-	  Tanggal lahir
-	  Umur
-	  No bpjs
-	  Id pasien
-	  Struct next 
+- Nama
+- Alamat
+- Kota
+- Tempat lahir
+- Tanggal lahir
+- Umur
+- No bpjs
+- Id pasien
+- Struct next 
 
 Struct riwayat
-	  Tanggal
-	  Id pasen
-	  Diagnosis
-	  Tindakaan
-	  Kontrol
-	  Biaya
+- Tanggal
+- Id pasen
+- Diagnosis
+- Tindakaan
+- Kontrol
+- Biaya
 
-Array biaya
+> Array biaya
 
 
