@@ -33,6 +33,6 @@ Struct riwayat
 - Kontrol
 - Biaya
 
-> Array biaya
+-> Array biaya
 
 
