@@ -1,4 +1,4 @@
-Fitur :
+# Fitur :
 
 1. Menambah, mengubah, menghapus dan mencari data pasien yang datang ke klinik X 
 2. Menambah, mengubah, menghapus dan mencari riwayat kedatangan, diagnosis dan tindakan pada pasien yang datang ke klinik X 
@@ -7,12 +7,12 @@ Fitur :
 5. Mendapatkan informasi jumlah pasien dan penyakit yang di derita pasien (diurutkan mulai dari yang terbesar sampai yang terkecil) per bulan dan per tahun 
 6. Memberikan informasi kepada petugas medis terkait pasien yang perlu kembali kontrol 
 
-Pembagian Tugas :
-Read & write excel (pisahin tanggal bulan dan tahun) : sapi [DL 8 juni]
-Fitur 1 2 : gab	[DL 8 juni]
-Fitur 3 6 : sam [DL 8 juni]
-Fitur 4 5 : nopal [DL 8 juni]
-Integrasi semua function : obi [DL ?? juni]
+# Pembagian Tugas :
+- Read & write excel (pisahin tanggal bulan dan tahun) : sapi [DL 8 juni]
+- Fitur 1 2 : gab	[DL 8 juni]
+- Fitur 3 6 : sam [DL 8 juni]
+- Fitur 4 5 : nopal [DL 8 juni]
+- Integrasi semua function : obi [DL ?? juni]
 
 Struct dataPasien
 	  Nama
