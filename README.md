@@ -33,6 +33,13 @@ Struct riwayat
 - Kontrol
 - Biaya
 
--> Array biaya
+Array biaya[6]
+- indeks 0 : Pendaftaran
+- indeks 1 : Pemeriksaan
+- indeks 2 : Vaksinasi
+- indeks 3 : Cek gula darah
+- indeks 4 : Pemasangan infus
+- indeks 5 : Pengobatan
+
 
 
