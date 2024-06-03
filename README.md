@@ -1,4 +1,3 @@
-
 Fitur :
 
 1. Menambah, mengubah, menghapus dan mencari data pasien yang datang ke klinik X 
@@ -16,23 +15,23 @@ Fitur 4 5 : nopal [DL 8 juni]
 Integrasi semua function : obi [DL ?? juni]
 
 Struct dataPasien
-	Nama
-	Alamat
-  Kota
-  Tempat lahir
-  Tanggal lahir
-  Umur
-  No bpjs
-  Id pasien
-  Struct next 
+	  Nama
+	  Alamat
+	  Kota
+	  Tempat lahir
+	  Tanggal lahir
+	  Umur
+	  No bpjs
+	  Id pasien
+	  Struct next 
 
 Struct riwayat
-  Tanggal
-  Id pasen
-  Diagnosis
-  Tindakaan
-  Kontrol
-  Biaya
+	  Tanggal
+	  Id pasen
+	  Diagnosis
+	  Tindakaan
+	  Kontrol
+	  Biaya
 
 Array biaya
 
