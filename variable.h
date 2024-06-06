@@ -8,8 +8,7 @@ typedef struct dataPasien
     char kota[255];
     char tempatLahir[255];
     int tanggalLahir[3];    // [0] = tanggal, [1] = bulan, [2] = tahun
-    char umur[255];
-    // int umur;
+    int umur;
     char noBpjs[255];
     char idPasien[255];
     struct dataPasien* next;

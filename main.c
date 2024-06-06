@@ -6,12 +6,8 @@
 
 
 #include "variable.h"
-#include "reader.h"
+#include "reader.c"
 
-// void readFile(dataPasien **head1, riwayatDiagnosis **head2){
-//     readFile1(head1, "DataPasien.csv");
-//     readFile2(head2, "RiwayatDiagnosis.csv");
-// }
 
 int main(){    
     dataPasienHead = (dataPasien*) malloc(sizeof(dataPasien));

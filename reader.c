@@ -2,18 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// extern struct dataPasien dataPasienHead;
-// extern struct riwayatDiagnosis riwayatDiagnosisHead;
-
-// extern char line[255];
-// extern char tempLine[255];
-// extern char* token;
-// extern int i;
-
 #include "variable.h"
-
-#include "reader.h"
-
 
 int getMonth(char month[255]){
     if(strstr("Januari", month) || strstr("januari", month)){
@@ -104,7 +93,7 @@ void addLinkedList1(dataPasien **headp, char temp[8][255], int baris){
         strcpy(n->kota, temp[2]);
         strcpy(n->tempatLahir, temp[3]);
         getTanggal(temp[4], n->tanggalLahir);
-        strcpy(n->umur, temp[5]);
+        n->umur = atoi(temp[5]);
         strcpy(n->noBpjs, temp[6]);
         strcpy(n->idPasien, temp[7]);
         n->next = NULL;
