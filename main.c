@@ -10,6 +10,7 @@
 
 
 int main(){    
+    
     dataPasienHead = (dataPasien*) malloc(sizeof(dataPasien));
     riwayatDiagnosisHead = (riwayatDiagnosis*) malloc(sizeof(riwayatDiagnosis));
 
