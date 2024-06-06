@@ -4,39 +4,25 @@
 #include <math.h>
 #include <time.h>
 
-#include "xlsxio_read.h"
 
+#include "variable.h"
+#include "reader.h"
 
+// void readFile(dataPasien **head1, riwayatDiagnosis **head2){
+//     readFile1(head1, "DataPasien.csv");
+//     readFile2(head2, "RiwayatDiagnosis.csv");
+// }
 
 int main(){    
-    char filename[255];
-    strcpy(filename,"DataPMC20232024.xlsx");
-    //open .xlsx file for reading
-    xlsxioreader xlsxioread;
-    if ((xlsxioread = xlsxioread_open(filename)) == NULL) {
-    fprintf(stderr, "Error opening .xlsx file\n");
-    return 1;
-    }
+    dataPasienHead = (dataPasien*) malloc(sizeof(dataPasien));
+    riwayatDiagnosisHead = (riwayatDiagnosis*) malloc(sizeof(riwayatDiagnosis));
 
-    //read values from first sheet
-    char* value;
-    xlsxioreadersheet sheet;
-    const char* sheetname = NULL;
-    printf("Contents of first sheet:\n");
-    if ((sheet = xlsxioread_sheet_open(xlsxioread, sheetname, XLSXIOREAD_SKIP_EMPTY_ROWS)) != NULL) {
-    //read all rows
-    while (xlsxioread_sheet_next_row(sheet)) {
-        //read all columns
-        while ((value = xlsxioread_sheet_next_cell(sheet)) != NULL) {
-        printf("%s\t", value);
-        xlsxioread_free(value);
-        }
-        printf("\n");
-    }
-    xlsxioread_sheet_close(sheet);
-    }
+    readFile(&dataPasienHead, &riwayatDiagnosisHead);
 
-    //clean up
-    xlsxioread_close(xlsxioread);
-
+    riwayatDiagnosis *cur = riwayatDiagnosisHead;
+    for(i=0; i<3; i++){
+        cur = cur->next;
+    }
+    printf("%d %d %d\n", cur->tanggalKontrol[0], cur->tanggalKontrol[1], cur->tanggalKontrol[2]);
+    return 0;
 }
