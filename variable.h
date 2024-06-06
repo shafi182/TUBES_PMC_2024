@@ -26,10 +26,15 @@ typedef struct riwayatDiagnosis
 } riwayatDiagnosis;
 
 
+// head untuk linked list
 dataPasien *dataPasienHead;
 riwayatDiagnosis *riwayatDiagnosisHead;
 
 int biayaTindakan[6];   // [0] = Pendaftaran, [1] = Pemeriksaan, [2] = Vaksinasi, [3] = Cek gula darah, [4] = pemasangan infus, [5] = pengobatan
+
+// variabel string untuk menyimpan header dari file
+char header1[255];
+char header2[255];
 
 // variabel untuk parsing
 char line[255];

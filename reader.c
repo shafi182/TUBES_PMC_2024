@@ -167,7 +167,8 @@ void readFile1(char fileName[255]){
     //Parsing
     char temp[8][255];
     i = 0;
-    fgets(line, 255, stream);   //  skip header
+    fgets(line, 255, stream);   
+    strcpy(header1, line);      // menyimpan data header
     while(fgets(line, 255, stream)){
         strcpy(tempLine, line);
         token = strtok(tempLine, ";");  // skip  data nomor
@@ -205,7 +206,8 @@ void readFile2(char fileName[255]){
     //Parsing
     char temp[6][255];
     i = 0;
-    fgets(line, 255, stream);   //  skip header
+    fgets(line, 255, stream); 
+    strcpy(header2, line);      // menyimpan data header
     while(fgets(line, 255, stream)){
         strcpy(tempLine, line);
         token = strtok(tempLine, ";");  // skip  data nomor

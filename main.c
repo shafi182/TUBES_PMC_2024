@@ -7,6 +7,7 @@
 
 #include "variable.h"
 #include "reader.c"
+#include "writer.c"
 
 
 int main(){    
@@ -16,12 +17,6 @@ int main(){
 
     readFile();
 
-    printf("%d %d %d\n", biayaTindakan[0], biayaTindakan[1], biayaTindakan[2]);
-
-    riwayatDiagnosis *cur = riwayatDiagnosisHead;
-    for(i=0; i<5; i++){
-        cur = cur->next;
-    }
-    printf("%d %s %s\n", cur->biaya, cur->idPasien, cur->diagnosis);
+    writeFile();
     return 0;
 }
