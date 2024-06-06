@@ -29,6 +29,8 @@ typedef struct riwayatDiagnosis
 dataPasien *dataPasienHead;
 riwayatDiagnosis *riwayatDiagnosisHead;
 
+int biayaTindakan[6];
+
 // variabel untuk parsing
 char line[255];
 char tempLine[255];

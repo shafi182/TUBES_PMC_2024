@@ -93,22 +93,22 @@ void getTanggal(char date[255], int dateArr[3]){
     }
 }
 
-void addLinkedList1(dataPasien **headp, char temp[8][255], int baris){
+void addLinkedList1(char temp[8][255], int baris){
 
     if(baris == 0){
-        strcpy((*headp)->nama, temp[0]);
-        strcpy((*headp)->alamat, temp[1]);
-        strcpy((*headp)->kota, temp[2]);
-        strcpy((*headp)->tempatLahir, temp[3]);
-        getTanggal(temp[4], (*headp)->tanggalLahir);
-        (*headp)->umur = atoi(temp[5]);
-        strcpy((*headp)->noBpjs, temp[6]);
-        strcpy((*headp)->idPasien, temp[7]);
-        (*headp)->next = NULL;
+        strcpy(dataPasienHead->nama, temp[0]);
+        strcpy(dataPasienHead->alamat, temp[1]);
+        strcpy(dataPasienHead->kota, temp[2]);
+        strcpy(dataPasienHead->tempatLahir, temp[3]);
+        getTanggal(temp[4], dataPasienHead->tanggalLahir);
+        dataPasienHead->umur = atoi(temp[5]);
+        strcpy(dataPasienHead->noBpjs, temp[6]);
+        strcpy(dataPasienHead->idPasien, temp[7]);
+        dataPasienHead->next = NULL;
     }
     else{
         // mencari data terakhir pada linked list
-        dataPasien *current = *headp;
+        dataPasien *current = dataPasienHead;
         while(current->next != NULL){
             current = current->next;
         }
@@ -126,20 +126,20 @@ void addLinkedList1(dataPasien **headp, char temp[8][255], int baris){
     }
 }
 
-void addLinkedList2(riwayatDiagnosis **headp, char temp[6][255], int baris){
+void addLinkedList2(char temp[6][255], int baris){
 
     if(baris == 0){
-        getTanggal(temp[0], (*headp)->tanggalPeriksa);
-        strcpy((*headp)->idPasien, temp[1]);
-        strcpy((*headp)->diagnosis, temp[2]);
-        strcpy((*headp)->tindakan, temp[3]);
-        getTanggal(temp[4], (*headp)->tanggalKontrol);
-        (*headp)->biaya = getBiaya(temp[5]);
-        (*headp)->next = NULL;
+        getTanggal(temp[0], riwayatDiagnosisHead->tanggalPeriksa);
+        strcpy(riwayatDiagnosisHead->idPasien, temp[1]);
+        strcpy(riwayatDiagnosisHead->diagnosis, temp[2]);
+        strcpy(riwayatDiagnosisHead->tindakan, temp[3]);
+        getTanggal(temp[4], riwayatDiagnosisHead->tanggalKontrol);
+        riwayatDiagnosisHead->biaya = getBiaya(temp[5]);
+        riwayatDiagnosisHead->next = NULL;
     }
     else{
         // mencari data terakhir pada linked list
-        riwayatDiagnosis *current = *headp;
+        riwayatDiagnosis *current = riwayatDiagnosisHead;
         while(current->next != NULL){
             current = current->next;
         }
@@ -156,7 +156,7 @@ void addLinkedList2(riwayatDiagnosis **headp, char temp[6][255], int baris){
     }
 }
 
-void readFile1(dataPasien **head, char fileName[255]){
+void readFile1(char fileName[255]){
 
     FILE* stream = fopen(fileName, "r");
     if (stream == NULL){
@@ -187,14 +187,14 @@ void readFile1(dataPasien **head, char fileName[255]){
         strcpy(temp[6], token);     // data no bpjs
         token = strtok(NULL, "\n");
         strcpy(temp[7], token);     // data id pasien
-        addLinkedList1(head, temp, i);
+        addLinkedList1(temp, i);
         
         i++;
     }
     fclose(stream);
 }
 
-void readFile2(riwayatDiagnosis **head, char fileName[255]){
+void readFile2(char fileName[255]){
 
     FILE* stream = fopen(fileName, "r");
     if (stream == NULL){
@@ -221,14 +221,15 @@ void readFile2(riwayatDiagnosis **head, char fileName[255]){
         strcpy(temp[4], token);     // data tanggal kontrol
         token = strtok(NULL, "\n");
         strcpy(temp[5], token);     // data biaya
-        addLinkedList2(head, temp, i);
+        addLinkedList2(temp, i);
         
         i++;
     }
     fclose(stream);
 }
 
-void readFile(dataPasien **head1, riwayatDiagnosis **head2){
-    readFile1(head1, "DataPasien.csv");
-    readFile2(head2, "RiwayatDiagnosis.csv");
+void readFile(){
+    readFile1("DataPasien.csv");
+    readFile2("RiwayatDiagnosis.csv");
+    // readFile3(biayaTindakan, "RiwayatDiagnosis.csv");
 }

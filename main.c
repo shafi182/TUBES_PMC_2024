@@ -14,12 +14,12 @@ int main(){
     dataPasienHead = (dataPasien*) malloc(sizeof(dataPasien));
     riwayatDiagnosisHead = (riwayatDiagnosis*) malloc(sizeof(riwayatDiagnosis));
 
-    readFile(&dataPasienHead, &riwayatDiagnosisHead);
+    readFile();
 
     riwayatDiagnosis *cur = riwayatDiagnosisHead;
-    for(i=0; i<3; i++){
+    for(i=0; i<5; i++){
         cur = cur->next;
     }
-    printf("%d %s %s\n", riwayatDiagnosisHead->biaya, riwayatDiagnosisHead->idPasien, riwayatDiagnosisHead->diagnosis);
+    printf("%d %s %s\n", cur->biaya, cur->idPasien, cur->diagnosis);
     return 0;
 }
