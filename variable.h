@@ -29,7 +29,7 @@ typedef struct riwayatDiagnosis
 dataPasien *dataPasienHead;
 riwayatDiagnosis *riwayatDiagnosisHead;
 
-int biayaTindakan[6];
+int biayaTindakan[6];   // [0] = Pendaftaran, [1] = Pemeriksaan, [2] = Vaksinasi, [3] = Cek gula darah, [4] = pemasangan infus, [5] = pengobatan
 
 // variabel untuk parsing
 char line[255];
