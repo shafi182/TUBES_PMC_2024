@@ -228,8 +228,32 @@ void readFile2(char fileName[255]){
     fclose(stream);
 }
 
+void readFile3(char fileName[255]){
+
+    FILE* stream = fopen(fileName, "r");
+    if (stream == NULL){
+        printf("File %s tidak ditemukan", fileName);
+        return;
+    }
+
+    //Parsing
+    char temp[6][255];
+    i = 0;
+    fgets(line, 255, stream);   //  skip header
+    while(fgets(line, 255, stream)){
+        strcpy(tempLine, line);
+        token = strtok(tempLine, ";");  // skip  data nomor
+        token = strtok(NULL, ";");  // skip data aktivitas
+        token = strtok(NULL, ";");
+        biayaTindakan[i] = getBiaya(token);    // data biaya tindakan
+        
+        i++;
+    }
+    fclose(stream);
+}
+
 void readFile(){
     readFile1("DataPasien.csv");
     readFile2("RiwayatDiagnosis.csv");
-    // readFile3(biayaTindakan, "RiwayatDiagnosis.csv");
+    readFile3("BiayaTindakan.csv");
 }
