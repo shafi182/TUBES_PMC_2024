@@ -1,40 +1,78 @@
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
+#include <glib/gstdio.h>
 #include <string.h>
-// #include 
 
-// typedef struct{
-//     char *str1;
-// }string;
+typedef struct{
+    const char *str1;
+    const char *str2;
+    const char *str3;
+    const char *str4;
+    const char *str5;
+    const char *str6;
+}strCallbackData;
 
-// static void on_button_clicked(GtkWidget *widget, gpointer data) {
-//     string *str = data;
-//     g_print("%s\n", str->str1);
-// }
+static void on_button_clicked(GtkWidget *widget, gpointer data) {
+    strCallbackData *str = data;
+    g_print("Data inside struct: \n");
+    g_print("%s\n", str->str1);
+    g_print("%s\n", str->str2);
+    g_print("%s\n", str->str3);
+    g_print("%s\n", str->str4);
+    g_print("%s\n", str->str5);
+    g_print("%s\n", str->str6);
+}
+
+static void *get_entry_text1(GtkEntry *entry, gpointer user_data) {   
+    strCallbackData *str = user_data;
+    const gchar *text = gtk_entry_buffer_get_text(GTK_ENTRY_BUFFER(gtk_entry_get_buffer(entry)));
+    str->str1 = text;
+}
+
+static void *get_entry_text2(GtkEntry *entry, gpointer user_data) {   
+    strCallbackData *str = user_data;
+    const gchar *text = gtk_entry_buffer_get_text(GTK_ENTRY_BUFFER(gtk_entry_get_buffer(entry)));
+    str->str2 = text;
+}
+
+static void *get_entry_text3(GtkEntry *entry, gpointer user_data) {   
+    strCallbackData *str = user_data;
+    const gchar *text = gtk_entry_buffer_get_text(GTK_ENTRY_BUFFER(gtk_entry_get_buffer(entry)));
+    str->str3 = text;
+}
+
+static void *get_entry_text4(GtkEntry *entry, gpointer user_data) {   
+    strCallbackData *str = user_data;
+    const gchar *text = gtk_entry_buffer_get_text(GTK_ENTRY_BUFFER(gtk_entry_get_buffer(entry)));
+    str->str4 = text;
+}
+
+static void *get_entry_text5(GtkEntry *entry, gpointer user_data) {   
+    strCallbackData *str = user_data;
+    const gchar *text = gtk_entry_buffer_get_text(GTK_ENTRY_BUFFER(gtk_entry_get_buffer(entry)));
+    str->str5 = text;
+}
+
+static void *get_entry_text6(GtkEntry *entry, gpointer user_data) {   
+    strCallbackData *str = user_data;
+    const gchar *text = gtk_entry_buffer_get_text(GTK_ENTRY_BUFFER(gtk_entry_get_buffer(entry)));
+    str->str6 = text;
+}
 
 static void activate(GtkApplication *app, gpointer user_data) {
+    // Inisialisasi
     GtkWidget *window, *sidebar, *stack, *box, *header, *button, *label, *entry;
     GtkWidget *grid1, *grid2, *grid3, *grid4, *grid5, *grid6, *grid7, *grid8, *grid9, *grid10, *grid11, *grid12, *grid13;
     GtkStackPage *page1, *page2, *page3, *page4, *page5, *page6, *page7, *page8, *page9, *page10, *page11, *page12, *page13;
-    // const char * pages[] = {
-    //     "Selamat datang!",                      //page1
-    //     "Tambah data pasien",                   //page2
-    //     "Ubah data pasien",                     //page3
-    //     "Hapus data pasien",                    //page4
-    //     "Cari data pasien",                     //page5
-    //     "Tambah riwayat medis pasien",          //page6
-    //     "Ubah riwayat medis pasien",            //page7
-    //     "Hapus riwayat medis pasien",           //page8
-    //     "Cari riwayat medis pasien",            //page9
-    //     "Kirim data dan riwayat medis pasien",  //page10
-    //     "Akses laporan keuangan",               //page11
-    //     "Statistik riwayat medis",              //page12
-    //     "Informasi jadwal kontrol pasien",      //page13
-    //     NULL
-    // };
-    // const char *c = NULL;
-    // guint i;
     
+    strCallbackData *strCallBack = g_new0(strCallbackData, 1);
+    strCallBack->str1 = "";
+    strCallBack->str2 = "";
+    strCallBack->str3 = "";
+    strCallBack->str4 = "";
+    strCallBack->str5 = "";
+    strCallBack->str6 = "";
+
     window = gtk_application_window_new(app);
     gtk_window_set_resizable(GTK_WINDOW(window), TRUE);
 
@@ -55,6 +93,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_box_append(GTK_BOX(box), stack);
 
     gtk_window_set_child(GTK_WINDOW(window), box);
+
+    gtk_window_present (GTK_WINDOW (window));
     
     //Page 1 (Selamat datang)
     {grid1 = gtk_grid_new();
@@ -68,6 +108,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
     
     //Page 2 (Tambah data pasien)
     {grid2 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid2), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid2), 10);
     page2 = gtk_stack_add_child(GTK_STACK(stack), grid2);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page2), "Tambah data pasien");
     
@@ -81,10 +123,10 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid2), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Anton");
-
-    // string *strCallBack = g_new0(string, 1);
-    // strCallBack->str1 = gtk_entry_get_text(GTK_ENTRY(entry));
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Anton");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
+    g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text1), strCallBack);
 
     label = gtk_label_new("Alamat\t\t\t: ");
     gtk_grid_attach(GTK_GRID(grid2), label, 0, 2, 1, 1);
@@ -92,7 +134,10 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid2), entry, 1, 2, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Jakarta");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Jakarta");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
+    g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text2), strCallBack);
 
     label = gtk_label_new("Tempat lahir\t\t: ");
     gtk_grid_attach(GTK_GRID(grid2), label, 0, 3, 1, 1);
@@ -100,7 +145,10 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid2), entry, 1, 3, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Bandung");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Bandung");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
+    g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text3), strCallBack);
 
     label = gtk_label_new("Tanggal lahir\t\t: ");
     gtk_grid_attach(GTK_GRID(grid2), label, 0, 4, 1, 1);
@@ -108,7 +156,10 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid2), entry, 1, 4, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Format: tanggal-bulan-tahun");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "tanggal-bulan-tahun");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
+    g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text4), strCallBack);
 
     label = gtk_label_new("No BPJS\t\t\t: ");
     gtk_grid_attach(GTK_GRID(grid2), label, 0, 5, 1, 1);
@@ -116,7 +167,10 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid2), entry, 1, 5, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: 1234567890");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "1234567890");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
+    g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text5), strCallBack);
 
     label = gtk_label_new("ID pasien\t\t: ");
     gtk_grid_attach(GTK_GRID(grid2), label, 0, 6, 1, 1);
@@ -124,18 +178,23 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid2), entry, 1, 6, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
+    g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text6), strCallBack);
 
     button = gtk_button_new_with_label("Tambahkan");
     gtk_grid_attach(GTK_GRID(grid2), button, 1, 7, 1, 1);
     gtk_widget_set_halign(button, GTK_ALIGN_END);
 
-    //g_signal_connect_swapped (G_OBJECT(button), "clicked", G_CALLBACK (on_button_clicked), strCallBack);
+    g_signal_connect (G_OBJECT(button), "clicked", G_CALLBACK (on_button_clicked), strCallBack);
 
     }
 
     //Page 3 (Ubah data pasien)
     {grid3 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid3), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid3), 10);
     page3 = gtk_stack_add_child(GTK_STACK(stack), grid3);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page3), "Ubah data pasien");
 
@@ -149,7 +208,10 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid3), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Anton");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Anton");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Alamat\t\t\t: ");
     gtk_grid_attach(GTK_GRID(grid3), label, 0, 2, 1, 1);
@@ -157,7 +219,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid3), entry, 1, 2, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Jakarta");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Jakarta");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Tempat lahir\t\t: ");
     gtk_grid_attach(GTK_GRID(grid3), label, 0, 3, 1, 1);
@@ -165,7 +229,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid3), entry, 1, 3, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Bandung");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Bandung");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Tanggal lahir\t\t: ");
     gtk_grid_attach(GTK_GRID(grid3), label, 0, 4, 1, 1);
@@ -173,7 +239,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid3), entry, 1, 4, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Format: tanggal-bulan-tahun");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "tanggal-bulan-tahun");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("No BPJS\t\t\t: ");
     gtk_grid_attach(GTK_GRID(grid3), label, 0, 5, 1, 1);
@@ -181,7 +249,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid3), entry, 1, 5, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: 1234567890");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "1234567890");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("ID pasien\t\t: ");
     gtk_grid_attach(GTK_GRID(grid3), label, 0, 6, 1, 1);
@@ -189,7 +259,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid3), entry, 1, 6, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Ubah");
     gtk_grid_attach(GTK_GRID(grid3), button, 1, 7, 1, 1);
@@ -198,6 +270,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 4 (Hapus data pasien)
     {grid4 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid4), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid4), 10);
     page4 = gtk_stack_add_child(GTK_STACK(stack), grid4);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page4), "Hapus data pasien");
 
@@ -211,7 +285,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid4), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Hapus");
     gtk_grid_attach(GTK_GRID(grid4), button, 1, 7, 1, 1);
@@ -220,6 +296,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 5 (Cari data pasien)
     {grid5 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid5), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid5), 10);
     page5 = gtk_stack_add_child(GTK_STACK(stack), grid5);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page5), "Cari data pasien");
 
@@ -233,7 +311,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid5), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Cari");
     gtk_grid_attach(GTK_GRID(grid5), button, 1, 7, 1, 1);
@@ -255,7 +335,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid6), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Tanggal kunjungan\t: ");
     gtk_grid_attach(GTK_GRID(grid6), label, 0, 2, 1, 1);
@@ -263,7 +345,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid6), entry, 1, 2, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Format: tanggal-bulan-tahun");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "tanggal-bulan-tahun");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Diagnosis\t\t: ");
     gtk_grid_attach(GTK_GRID(grid6), label, 0, 3, 1, 1);
@@ -271,7 +355,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid6), entry, 1, 3, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Dehidrasi");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Dehidrasi");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Tindakan\t\t\t: ");
     gtk_grid_attach(GTK_GRID(grid6), label, 0, 4, 1, 1);
@@ -279,7 +365,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid6), entry, 1, 4, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Vaksinasi");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Vaksinasi");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Jadwal kontrol\t: ");
     gtk_grid_attach(GTK_GRID(grid6), label, 0, 5, 1, 1);
@@ -287,7 +375,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid6), entry, 1, 5, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Format: tanggal-bulan-tahun");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "tanggal-bulan-tahun");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Tambahkan");
     gtk_grid_attach(GTK_GRID(grid6), button, 1, 6, 1, 1);
@@ -296,6 +386,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
     
     //Page 7 (Ubah riwayat medis pasien)
     {grid7 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid7), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid7), 10);
     page7 = gtk_stack_add_child(GTK_STACK(stack), grid7);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page7), "Ubah riwayat medis pasien");
 
@@ -309,7 +401,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid7), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Tanggal kunjungan\t: ");
     gtk_grid_attach(GTK_GRID(grid7), label, 0, 2, 1, 1);
@@ -317,7 +411,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid7), entry, 1, 2, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Format: tanggal-bulan-tahun");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "tanggal-bulan-tahun");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Diagnosis\t\t: ");
     gtk_grid_attach(GTK_GRID(grid7), label, 0, 3, 1, 1);
@@ -325,7 +421,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid7), entry, 1, 3, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Dehidrasi");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Dehidrasi");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Tindakan\t\t\t: ");
     gtk_grid_attach(GTK_GRID(grid7), label, 0, 4, 1, 1);
@@ -333,7 +431,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid7), entry, 1, 4, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Vaksinasi");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Vaksinasi");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     label = gtk_label_new("Jadwal kontrol\t: ");
     gtk_grid_attach(GTK_GRID(grid7), label, 0, 5, 1, 1);
@@ -341,7 +441,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid7), entry, 1, 5, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: tanggal-bulan-tahun");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "tanggal-bulan-tahun");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Tambahkan");
     gtk_grid_attach(GTK_GRID(grid7), button, 1, 6, 1, 1);
@@ -350,6 +452,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 8 (Hapus riwayat medis pasien)
     {grid8 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid8), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid8), 10);
     page8 = gtk_stack_add_child(GTK_STACK(stack), grid8);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page8), "Hapus riwayat medis pasien");
 
@@ -363,7 +467,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid8), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Hapus");
     gtk_grid_attach(GTK_GRID(grid8), button, 1, 7, 1, 1);
@@ -372,6 +478,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 9 (Cari riwayat medis pasien)
     {grid9 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid9), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid9), 10);
     page9 = gtk_stack_add_child(GTK_STACK(stack), grid9);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page9), "Cari riwayat medis pasien");
 
@@ -385,7 +493,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid9), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Cari");
     gtk_grid_attach(GTK_GRID(grid9), button, 1, 2, 1, 1);
@@ -398,6 +508,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 10 (Kirim data dan riwayat medis pasien ke petugas medis)
     {grid10 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid10), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid10), 10);
     page10 = gtk_stack_add_child(GTK_STACK(stack), grid10);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page10), "Kirim data dan riwayat medis pasien ke petugas medis");
 
@@ -411,7 +523,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid10), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: KX 1234567");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "KX 1234567");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Kirim");
     gtk_grid_attach(GTK_GRID(grid10), button, 1, 2, 1, 1);
@@ -424,6 +538,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 11 (Akses laporan keuangan)
     {grid11 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid11), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid11), 10);
     page11 = gtk_stack_add_child(GTK_STACK(stack), grid11);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page11), "Akses laporan keuangan");
 
@@ -439,6 +555,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 12 (Statistik riwayat medis)
     {grid12 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid12), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid12), 10);
     page12 = gtk_stack_add_child(GTK_STACK(stack), grid12);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page12), "Statistik riwayat medis");
 
@@ -454,6 +572,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     //Page 13 (Informasi jadwal kontrol pasien)
     {grid13 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid13), 10);
+    gtk_grid_set_column_spacing(GTK_GRID(grid13), 10);
     page13 = gtk_stack_add_child(GTK_STACK(stack), grid13);
     gtk_stack_page_set_title(GTK_STACK_PAGE(page13), "Informasi jadwal kontrol pasien");
 
@@ -467,7 +587,9 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     entry = gtk_entry_new();
     gtk_grid_attach(GTK_GRID(grid13), entry, 1, 1, 2, 1);
-    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Contoh: Januari");
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "Januari");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
 
     button = gtk_button_new_with_label("Cari");
     gtk_grid_attach(GTK_GRID(grid13), button, 1, 2, 1, 1);
@@ -478,7 +600,6 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_widget_set_halign(label, GTK_ALIGN_START);
     }
 
-    gtk_window_present (GTK_WINDOW (window));
 }
 
 int main(int argc, char *argv[]) {
