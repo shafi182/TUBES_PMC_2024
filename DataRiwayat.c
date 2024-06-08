@@ -1,30 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "variable.h"
 
-typedef struct dataPasien
-{
-    char nama[255];
-    char alamat[255];
-    char kota[255];
-    char tempatLahir[255];
-    int tanggalLahir[3];    // [0] = tanggal, [1] = bulan, [2] = tahun
-    int umur;
-    char noBpjs[255];
-    char idPasien[255];
-    struct dataPasien* next;
-} dataPasien;
-
-typedef struct riwayatDiagnosis
-{
-    int tanggalPeriksa[3];    // [0] = tanggal, [1] = bulan, [2] = tahun
-    char idPasien[255];
-    char diagnosis[255];
-    char tindakan[255];
-    int tanggalKontrol[3];    // [0] = tanggal, [1] = bulan, [2] = tahun
-    int biaya;
-    struct riwayatDiagnosis* next;
-} riwayatDiagnosis;
 
 int getMonth_(const char* month) {
     if (strcasecmp(month, "januari") == 0 || strcasecmp(month, "Januari") == 0) return 1;
@@ -56,7 +34,7 @@ const char* getMonthStr(int month) {
         case 10: return "Oktober";
         case 11: return "November";
         case 12: return "Desember";
-        default: return "Invalid"; // Handle invalid month
+        default: return "Invalid";
     }
 }
 
