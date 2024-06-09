@@ -16,7 +16,8 @@ int main(){
     riwayatDiagnosisHead = (riwayatDiagnosis*) malloc(sizeof(riwayatDiagnosis));
 
     readFile();
-
+    infoPendapatan(&riwayatDiagnosisHead);
+    jumlahPasiendanPenyakit(&riwayatDiagnosisHead);
     writeFile();
     return 0;
 }
