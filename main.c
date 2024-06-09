@@ -8,6 +8,7 @@
 #include "variable.h"
 #include "reader.c"
 #include "writer.c"
+#include "func4&5.c"
 
 
 int main(){    
