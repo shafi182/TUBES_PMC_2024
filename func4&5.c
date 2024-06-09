@@ -7,12 +7,15 @@
 #define maxs 255
 #include "variable.h"
 
+//Linked list untuk menyimpan list penyakit dan jumlah masing-masing penyakitnya per bulan
 typedef struct dataPenyakit{
     char penyakit[maxs];
     int jumlah;
     struct dataPenyakit* next;
 } dataPenyakit;
 
+
+//Fungsi untuk mengurutkan linked list berdasarkan tahun menggunakan bubble sort
 void sortYear(riwayatDiagnosis** head_ref) 
 {
     riwayatDiagnosis *current = *head_ref, *index = NULL;
@@ -70,6 +73,7 @@ void sortYear(riwayatDiagnosis** head_ref)
     }
 }
 
+//Fungsi untuk menghitung jumlah variasi tahun dalam linked list
 int countYear(riwayatDiagnosis** head_ref)
 {
     riwayatDiagnosis* current = *head_ref;
@@ -86,6 +90,7 @@ int countYear(riwayatDiagnosis** head_ref)
     return tahun;
 }
 
+//Fungsi untuk menambahkan penyakit (diagnosa) ke list
 void insertPenyakit(dataPenyakit** head_ref, char penyakit[maxs]) {
     dataPenyakit* new_node = (dataPenyakit*)malloc(sizeof(dataPenyakit));
     dataPenyakit* last = *head_ref;
@@ -106,6 +111,7 @@ void insertPenyakit(dataPenyakit** head_ref, char penyakit[maxs]) {
     return;
 }
 
+//Fungsi untuk mencari penyakit (diagnosa) dalam list per bulan
 int searchPenyakit(dataPenyakit** head_ref, char penyakit[maxs]) 
 {
     dataPenyakit* current = *head_ref;
@@ -122,6 +128,7 @@ int searchPenyakit(dataPenyakit** head_ref, char penyakit[maxs])
     return 0;
 }
 
+//Fungsi untuk mengurutkan linked list berdasarkan tahun menggunakan bubble sort
 void sortPenyakit(dataPenyakit** head_ref) 
 {
     dataPenyakit *current = *head_ref, *index = NULL;
@@ -151,20 +158,9 @@ void sortPenyakit(dataPenyakit** head_ref)
     }
 }
 
-void printLL(riwayatDiagnosis* node) {
-    int i = 0;
-    while (node != NULL) 
-    {
-        i++;
-        printf("%d/%d/%d\t:\t%s\n", node->tanggalPeriksa[0],node->tanggalPeriksa[1],node->tanggalPeriksa[2], node->idPasien);
-        node = node->next;
-    }
-    printf("total: %d\n",i);
-}
-
+//Fungsi untuk menampilkan data penyakit per bulan
 void printLL2(dataPenyakit* node, char massage[1024], char buffer[256]) 
 {
-
     while (node != NULL) 
     {
         sprintf(buffer,"%s:%d\n", node->penyakit, node->jumlah);
@@ -181,18 +177,20 @@ void infoPendapatan(riwayatDiagnosis** head_ref)
 {
     riwayatDiagnosis* current = *head_ref;
     riwayatDiagnosis* temp = current;
-    sortYear(&temp);
+    sortYear(&temp); //Mengurutkan linked list berdasarkan tahun
 
-    int tahun = countYear(&temp); 
+    int tahun = countYear(&temp); //Menghitung jumlah variasi tahun
 
-    int perTahun[tahun];
-    int daftarTahun[tahun];
-    int avgTahun[tahun];
-    int perBulan[tahun][12];
+    int perTahun[tahun]; //Menyimpan pendapatan per tahun
+    int daftarTahun[tahun]; //Menyimpan variasi tahun
+    int avgTahun[tahun]; //Menyimpan rata-rata pendapatan per tahun
+    int perBulan[tahun][12]; //Menyimpan pendapatan per bulan
     char daftarBulan [12][20] = {"Januari  ", "Februari", "Maret   ", "April   ", "Mei     ", "Juni    ", "Juli    ", "Agustus ", "September", "Oktober ", "November", "Desember"};
     
-    int i = 0, a, b, n = 0;
+    int i = 0, a, b, n = 0; 
+    //Variabel n menyimpan jumlah kedatangan pasien per tahun
     
+    //Inisialisasi variabel
     for (int o=0; o<tahun; o++)
     {
         for (int p = 0; p<12; p++)
@@ -204,59 +202,63 @@ void infoPendapatan(riwayatDiagnosis** head_ref)
         daftarTahun[o]=0;
     }
 
+    //Menghitung pendapatan per tahun dan per bulan
     while (temp != NULL)
     {
+        //Looping untuk menghitung pendapatan per tahun
         do
         {
-            if (temp->tanggalPeriksa[1] == 1)
+            //Menghitung pendapatan per bulan
+            if (temp->tanggalPeriksa[1] == 1) //Bulan Januari
             {
                 perBulan[i][0]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 2)
+            else if (temp->tanggalPeriksa[1] == 2) //Bulan Februari
             {
                 perBulan[i][1]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 3)
+            else if (temp->tanggalPeriksa[1] == 3) //Bulan Maret
             {
                 perBulan[i][2]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 4)
+            else if (temp->tanggalPeriksa[1] == 4) //Bulan April
             {
                 perBulan[i][3]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 5)
+            else if (temp->tanggalPeriksa[1] == 5) //Bulan Mei
             {
                 perBulan[i][4]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 6)
+            else if (temp->tanggalPeriksa[1] == 6) //Bulan Juni
             {
                 perBulan[i][5]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 7)
+            else if (temp->tanggalPeriksa[1] == 7) //Bulan Juli
             {
                 perBulan[i][6]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 8)
+            else if (temp->tanggalPeriksa[1] == 8) //Bulan Agustus
             {
                 perBulan[i][7]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 9)
+            else if (temp->tanggalPeriksa[1] == 9) //Bulan September
             {
                 perBulan[i][8]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 10)
+            else if (temp->tanggalPeriksa[1] == 10) //Bulan Oktober
             {
                 perBulan[i][9]+=temp->biaya;
             }
-            else if (temp->tanggalPeriksa[1] == 11)
+            else if (temp->tanggalPeriksa[1] == 11) //Bulan November
             {
                 perBulan[i][10]+=temp->biaya;
             }
-            else
+            else if (temp->tanggalPeriksa[1] == 12) //Bulan Desember
             {
                 perBulan[i][11]+=temp->biaya;
             }
-            perTahun[i]+=temp->biaya;
+            perTahun[i]+=temp->biaya; //Menghitung pendapatan per tahun
+            //a & b untuk memeriksa apakah sudah ganti tahun 
             a = temp->tanggalPeriksa[2];
             if (temp->next != NULL)
             {
@@ -266,19 +268,21 @@ void infoPendapatan(riwayatDiagnosis** head_ref)
             {
                 b = 99;
             }
-            n++;
-            temp = temp->next;
+            n++; //Menyimpan jumlah kedatangan pasien
+            temp = temp->next; //Lanjut ke data berikutnya
         } 
         while (a == b && temp!=NULL);
-        daftarTahun[i] += a;
-        avgTahun[i] = perTahun[i]/n;
-        i++;
-        n = 0;
+        //Ganti tahun
+        daftarTahun[i] += a; //Menyimpan tahun
+        avgTahun[i] = perTahun[i]/n; //Menghitung rata-rata pendapatan per tahun
+        i++; //Indeks ke tahun berikutnya
+        n = 0; //Reset n
     }
 
     char message[1024] = ""; // Buffer untuk pesan
     char buffer[256];
 
+    //Mencetak pendapatan per tahun dan per bulan
     for (int j = 0; j < tahun; j++)
     {
         sprintf("Tahun %d :\nPasien bulanan:\n", daftarTahun[j]);
@@ -290,7 +294,7 @@ void infoPendapatan(riwayatDiagnosis** head_ref)
                 sprintf(buffer,"%s\t:\tRp%d\n", daftarBulan[k], perBulan[j][k]);
                 strcat(message, buffer);
             }
-            else
+            else //Tidak ada pendapatan (bulanan)
             {
                 sprintf(buffer,"%s\t:\tRp0\n", daftarBulan[k], perBulan[j][k]);
                 strcat(message, buffer);
@@ -309,19 +313,20 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
 {
     riwayatDiagnosis* current = *head_ref;
     riwayatDiagnosis* temp = current;
-    sortYear(&temp);
+    sortYear(&temp); //Mengurutkan linked list berdasarkan tahun
 
-    int tahun = countYear(&temp);
+    int tahun = countYear(&temp); //Menghitung jumlah variasi tahun
 
-    int perTahun[tahun];
-    int daftarTahun[tahun];
-    int avgTahun[tahun];
-    int perBulan[tahun][12];
+    int perTahun[tahun]; //Menyimpan pendapatan per tahun
+    int daftarTahun[tahun]; //Menyimpan variasi tahun
+    int avgTahun[tahun]; //Menyimpan rata-rata pendapatan per tahun
+    int perBulan[tahun][12]; //Menyimpan pendapatan per bulan
     char daftarBulan [12][25] = {"Januari  ", "Februari", "Maret   ", "April   ", "Mei     ", "Juni    ", "Juli    ", "Agustus ", "September", "Oktober ", "November", "Desember"};
     
     int i = 0, a, b, n = 0;
-    dataPenyakit* diagnosis[tahun][12];
+    dataPenyakit* diagnosis[tahun][12]; //List penyakit & jumlahnya per bulan
 
+    //Inisialisasi variabel
     for (int o=0; o<tahun; o++)
     {
         for (int p = 0; p<12; p++)
@@ -334,21 +339,25 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
         daftarTahun[o]=0;
     }
 
+    //Menghitung jumlah pasien dan diagnosis per tahun dan per bulan
     while (temp != NULL)
     {
+        //Looping untuk menghitung per tahun
         do
         {
-            if (temp->tanggalPeriksa[1] == 1)
+            //Menghitung pendapatan per bulan
+            if (temp->tanggalPeriksa[1] == 1) //Bulan Januari
             {
-                perBulan[i][0]++;
-                int x = searchPenyakit(&diagnosis[i][0],temp->diagnosis);
+                perBulan[i][0]++; //Menambahkan jumlah pasien per bulan
+                int x = searchPenyakit(&diagnosis[i][0],temp->diagnosis); //Mencari diagnosis dalam list
                 if (x==0)
                 {
+                    //Jika diagnosis belum ada, diagnosis dimasukkan ke dalam list
                     insertPenyakit(&diagnosis[i][0],temp->diagnosis);
                 }
-                sortPenyakit(&diagnosis[i][0]);
-            }
-            else if (temp->tanggalPeriksa[1] == 2)
+                sortPenyakit(&diagnosis[i][0]); //Mengurutkan list diagnosis dari yang jumlahnya paling banyak
+            } //Pada bulan-bulan selanjutnya cara kerjanya sama
+            else if (temp->tanggalPeriksa[1] == 2) //Bulan Februari
             {
                 perBulan[i][1]++;
                 int x = searchPenyakit(&diagnosis[i][1],temp->diagnosis);
@@ -358,7 +367,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][1]);
             }
-            else if (temp->tanggalPeriksa[1] == 3)
+            else if (temp->tanggalPeriksa[1] == 3) //Bulan Maret
             {
                 perBulan[i][2]++;
                 int x = searchPenyakit(&diagnosis[i][2],temp->diagnosis);
@@ -368,7 +377,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][2]);
             }
-            else if (temp->tanggalPeriksa[1] == 4)
+            else if (temp->tanggalPeriksa[1] == 4) //Bulan April
             {
                 perBulan[i][3]++;
                 int x = searchPenyakit(&diagnosis[i][3],temp->diagnosis);
@@ -378,7 +387,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][3]);
             }
-            else if (temp->tanggalPeriksa[1] == 5)
+            else if (temp->tanggalPeriksa[1] == 5) //Bulan Mei
             {
                 perBulan[i][4]++;
                 int x = searchPenyakit(&diagnosis[i][4],temp->diagnosis);
@@ -388,7 +397,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][4]);
             }
-            else if (temp->tanggalPeriksa[1] == 6)
+            else if (temp->tanggalPeriksa[1] == 6) //Bulan Juni
             {
                 perBulan[i][5]++;
                 int x = searchPenyakit(&diagnosis[i][5],temp->diagnosis);
@@ -398,7 +407,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][5]);
             }
-            else if (temp->tanggalPeriksa[1] == 7)
+            else if (temp->tanggalPeriksa[1] == 7) //Bulan Juli
             {
                 perBulan[i][6]++;
                 int x = searchPenyakit(&diagnosis[i][6],temp->diagnosis);
@@ -408,7 +417,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][6]);
             }
-            else if (temp->tanggalPeriksa[1] == 8)
+            else if (temp->tanggalPeriksa[1] == 8) //Bulan Agustus
             {
                 perBulan[i][7]++;
                 int x = searchPenyakit(&diagnosis[i][7],temp->diagnosis);
@@ -418,7 +427,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][7]);
             }
-            else if (temp->tanggalPeriksa[1] == 9)
+            else if (temp->tanggalPeriksa[1] == 9) //Bulan September
             {
                 perBulan[i][8]++;
                 int x = searchPenyakit(&diagnosis[i][8],temp->diagnosis);
@@ -428,17 +437,17 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][8]);
             }
-            else if (temp->tanggalPeriksa[1] == 10)
+            else if (temp->tanggalPeriksa[1] == 10) //Bulan Oktober
             {
                 perBulan[i][9]++;
-                int x = searchPenyakit(&diagnosis[i][9],temp->diagnosis);
+                int x = searchPenyakit(&diagnosis[i][9],temp->diagnosis); 
                 if (x==0)
                 {
                     insertPenyakit(&diagnosis[i][9],temp->diagnosis);
                 }
                 sortPenyakit(&diagnosis[i][9]);
             }
-            else if (temp->tanggalPeriksa[1] == 11)
+            else if (temp->tanggalPeriksa[1] == 11) //Bulan November
             {
                 perBulan[i][10]++;
                 int x = searchPenyakit(&diagnosis[i][10],temp->diagnosis);
@@ -448,7 +457,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][10]);
             }
-            else
+            else if (temp->tanggalPeriksa[1] == 12) //Bulan Desember
             {
                 perBulan[i][11]++;
                 int x = searchPenyakit(&diagnosis[i][11],temp->diagnosis);
@@ -458,7 +467,8 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 }
                 sortPenyakit(&diagnosis[i][11]);
             }
-            perTahun[i]++;
+            perTahun[i]++; //Menghitung jumlah kedatangan pasien per tahun
+            //a & b untuk memeriksa apakah sudah ganti tahun
             a = temp->tanggalPeriksa[2];
             if (temp->next != NULL)
             {
@@ -468,18 +478,18 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
             {
                 b = 99;
             }
-            n++;
-            temp = temp->next;
+            temp = temp->next; //Lanjut ke data berikutnya
         } 
         while (a == b && temp!=NULL);
-        daftarTahun[i] += a;
-        i++;
-        n = 0;
+        //Ganti tahun
+        daftarTahun[i] += a; //Menyimpan tahun
+        i++; //Indeks ke tahun berikutnya
     }
 
-    char message[1024] = "";
+    char message[1024] = ""; //Buffer untuk pesan
     char buffer[256];
 
+    //Mencetak jumlah pasien dan penyakit per tahun dan per bulan
     for (int j = 0; j < tahun; j++)
     {
         sprintf(buffer,"Tahun %d :\nPasien bulanan:\n", daftarTahun[j]);
@@ -494,7 +504,7 @@ void jumlahPasiendanPenyakit(riwayatDiagnosis** head_ref)
                 strcat(message,"Daftar diagnosis:\n");
                 printLL2(diagnosis[j][k],message,buffer);
             }
-            else
+            else //Tidak ada pasien (bulanan)
             {
                 sprintf(buffer,"%s\t:\t0\n", daftarBulan[k], perBulan[j][k]);
                 strcat(message, buffer);
