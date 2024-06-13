@@ -188,10 +188,44 @@ void readFile1(char fileName[255]){
         strcpy(temp[6], token);     // data no bpjs
         token = strtok(NULL, "\n");
         strcpy(temp[7], token);     // data id pasien
+        printf("%s\n", temp[2]);
         addLinkedList1(temp, i);
+        // if(i == 0){
+        //     printf("masuk 1\n");
+        //     strcpy(dataPasienHead->nama, temp[0]);
+        //     printf("%s", dataPasienHead->nama);
+        //     printf("masuk 2\n");
+        //     strcpy(dataPasienHead->alamat, temp[1]);
+        //     strcpy(dataPasienHead->kota, temp[2]);
+        //     strcpy(dataPasienHead->tempatLahir, temp[3]);
+        //     getTanggal(temp[4], dataPasienHead->tanggalLahir);
+        //     dataPasienHead->umur = atoi(temp[5]);
+        //     strcpy(dataPasienHead->noBpjs, temp[6]);
+        //     strcpy(dataPasienHead->idPasien, temp[7]);
+        //     dataPasienHead->next = NULL;
+        // }
+        // else{
+        //     // mencari data terakhir pada linked list
+        //     dataPasien *current = dataPasienHead;
+        //     while(current->next != NULL){
+        //         current = current->next;
+        //     }
+        //     dataPasien *n = (dataPasien*) malloc(sizeof(dataPasien));
+        //     strcpy(n->nama, temp[0]);
+        //     strcpy(n->alamat, temp[1]);
+        //     strcpy(n->kota, temp[2]);
+        //     strcpy(n->tempatLahir, temp[3]);
+        //     getTanggal(temp[4], n->tanggalLahir);
+        //     n->umur = atoi(temp[5]);
+        //     strcpy(n->noBpjs, temp[6]);
+        //     strcpy(n->idPasien, temp[7]);
+        //     n->next = NULL;
+        //     current->next = n;
+        // }
         
         i++;
     }
+    printf("beres 1\n");
     fclose(stream);
 }
 
@@ -255,7 +289,12 @@ void readFile3(char fileName[255]){
 }
 
 void readFile(){
-    readFile1("DataPasien.csv");
-    readFile2("RiwayatDiagnosis.csv");
-    readFile3("BiayaTindakan.csv");
+    char fileName[255];
+    strcpy(fileName, "DataPasien.csv");
+    readFile1(fileName);
+    strcpy(fileName, "RiwayatDiagnosis.csv");
+    readFile2(fileName);
+    strcpy(fileName, "BiayaTindakan.csv");
+    readFile3(fileName);
+    printf("beres\n");
 }

@@ -1,6 +1,8 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
+#include <gtk/gtk.h>
+
 typedef struct dataPasien
 {
     char nama[255];
@@ -30,6 +32,7 @@ typedef struct riwayatDiagnosis
 dataPasien *dataPasienHead;
 riwayatDiagnosis *riwayatDiagnosisHead;
 
+
 int biayaTindakan[6];   // [0] = Pendaftaran, [1] = Pemeriksaan, [2] = Vaksinasi, [3] = Cek gula darah, [4] = pemasangan infus, [5] = pengobatan
 
 // variabel string untuk menyimpan header dari file
@@ -41,5 +44,20 @@ char line[255];
 char tempLine[255];
 char* token;
 int i;
+
+
+typedef struct{
+    dataPasien *dataPasienHead;
+    riwayatDiagnosis *riwayatDiagnosisHead;
+    const char *str1;
+    const char *str2;
+    const char *str3;
+    const char *str4;
+    const char *str5;
+    const char *str6;
+    const char *str7;
+    char strOutput[3600];
+    GtkWidget *labelOutput;
+}strCallbackData;
 
 #endif

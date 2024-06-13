@@ -86,6 +86,9 @@ void writeFile2(char filename[255]){
 }
 
 void writeFile(){
-    writeFile1("tes1.csv");
-    writeFile2("tes2.csv");
+    char filename[255];
+    strcpy(filename, "tes1.csv");
+    writeFile1(filename);
+    strcpy(filename, "tes2.csv");
+    writeFile2(filename);
 }

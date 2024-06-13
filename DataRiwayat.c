@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gtk/gtk.h>
+
 #include "variable.h"
 
 
@@ -76,24 +78,30 @@ void tanggalKontrol(int tanggal[3], int hariTambah)
     tanggal[2] = tglTemp[2];
 }
 
-void tambahData(dataPasien** pasienHead, const char* nama, const char* alamat, const char* kota, const char* tempatLahir, const char* tanggalLahirStr, const char* noBpjs, const char* idPasien)
+void tambahData(GtkWidget* widget, gpointer userData)
 {
+    strCallbackData* temp = userData;
+
+    // dataPasien** pasienHead, const char* nama, const char* alamat, const char* kota, const char* tempatLahir, const char* tanggalLahirStr, const char* noBpjs, const char* idPasien
     dataPasien* newPasien = (dataPasien*)malloc(sizeof(dataPasien));
+    
     if (newPasien == NULL) {
         return;
     }
+    g_print("masuk\n");
 
-    strcpy(newPasien->nama, nama);
-    strcpy(newPasien->alamat, alamat);
-    strcpy(newPasien->kota, kota);
-    strcpy(newPasien->tempatLahir, tempatLahir);
-    strcpy(newPasien->noBpjs, noBpjs);
-    strcpy(newPasien->idPasien, idPasien);
+    strcpy((newPasien->nama), (temp->str1));
+    g_print("masuk2\n");
+    strcpy(newPasien->alamat, temp->str2);
+    strcpy(newPasien->kota, temp->str3);
+    strcpy(newPasien->tempatLahir, temp->str4);
+    strcpy(newPasien->noBpjs, temp->str6);
+    strcpy(newPasien->idPasien, temp->str7);
 
     //passing tanggal lahir
 
     char tanggalLahirCopy[255];
-    strcpy(tanggalLahirCopy, tanggalLahirStr);
+    strcpy(tanggalLahirCopy, temp->str5);
     char* token = strtok(tanggalLahirCopy, "-");
     newPasien->tanggalLahir[0] = atoi(token);
     token = strtok(NULL, "-");
@@ -109,11 +117,11 @@ void tambahData(dataPasien** pasienHead, const char* nama, const char* alamat, c
     newPasien->umur = getAge(tanggalLahir);
 
     char message[255];
-    strcpy(message, "Data berhasil ditambahkan");
+    strcpy(temp->strOutput, "Data berhasil ditambahkan");
 
 
-    newPasien->next = *pasienHead;
-    *pasienHead = newPasien;
+    newPasien->next = dataPasienHead;
+    dataPasienHead = newPasien;
 }
 
 void tambahRiwayat(riwayatDiagnosis** riwayatHead, const char* idPasien, const char* tanggalPeriksaStr, const char* diagnosis, const char* tindakan)
@@ -351,7 +359,7 @@ void ubahRiwayatDiagnosis(riwayatDiagnosis* riwayatHead, const char* idPasien, c
     strcpy(message, "Riwayat berhasil diubah");
 }
 
-void searchData(dataPasien* pasienHead, const char* idPasien)
+void searchData(GtkWidget* widget, gpointer userData)
 {
     dataPasien* current = pasienHead;
 
