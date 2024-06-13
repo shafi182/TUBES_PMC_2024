@@ -251,7 +251,7 @@ void ubahDataPasien(dataPasien* pasienHead, const char* idPasien, const char* na
     dataPasien* current = pasienHead;
 
     // Cari pasien berdasarkan ID
-    while (current != NULL && strcmp(current->idPasien, idPasien) != 0 && ) {
+    while (current != NULL && strcmp(current->idPasien, idPasien) != 0) {
         current = current->next;
     }
 
