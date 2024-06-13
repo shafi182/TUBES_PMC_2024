@@ -246,7 +246,7 @@ void hapusRiwayatDiagnosis(riwayatDiagnosis** riwayatHead, const char* idPasien,
 
 }
 
-void ubahDataPasien(dataPasien* pasienHead, const char* idPasien, const char* nama, const char* alamat, const char* kota, const char* tempatLahir, const char* tanggalLengkap, const char* noBpjs)* bulan, const char* tahun, const char* noBpjs)
+void ubahDataPasien(dataPasien* pasienHead, const char* idPasien, const char* nama, const char* alamat, const char* kota, const char* tempatLahir, const char* tanggalLengkap, const char* noBpjs)
 {
     dataPasien* current = pasienHead;
 
