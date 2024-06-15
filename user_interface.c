@@ -4,24 +4,12 @@
 #include <string.h>
 
 #include "variable.h"
-// #include "variable.c"
 #include "reader.c"
 #include "writer.c"
-#include "DataRiwayat.c"
+#include "fungsi1&2.c"
+#include "fungsi3.c"
+#include "Fungsi6.c"
 
-// typedef struct{
-//     dataPasien *dataPasienHead;
-//     riwayatDiagnosis *riwayatDiagnosisHead;
-//     const char *str1;
-//     const char *str2;
-//     const char *str3;
-//     const char *str4;
-//     const char *str5;
-//     const char *str6;
-//     const char *str7;
-//     const char *strOutput;
-//     GtkWidget *labelOutput;
-// }strCallbackData;
 
 static void on_button_clicked(GtkWidget *widget, gpointer data) {
     strCallbackData *str = data;
@@ -748,6 +736,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_widget_set_halign(strCallBack10->labelOutput, GTK_ALIGN_START);
     gtk_widget_set_margin_start(strCallBack10->labelOutput, 10);
 
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(cariInformasiPasien), strCallBack10);
     g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(set_label_text), strCallBack10);
     }
 
