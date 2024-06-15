@@ -5,10 +5,10 @@
 
 #include "variable.h"
 #include "reader.c"
-#include "writer.c"
 #include "fungsi1&2.c"
 #include "fungsi3.c"
 #include "Fungsi6.c"
+#include "writer.c"
 
 
 static void on_button_clicked(GtkWidget *widget, gpointer data) {
@@ -826,16 +826,29 @@ static void activate(GtkApplication *app, gpointer user_data) {
     gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
     g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text1), strCallBack13);
 
+    label = gtk_label_new("Tahun\t\t\t: ");
+    gtk_grid_attach(GTK_GRID(grid13), label, 0, 2, 1, 1);
+    gtk_widget_set_halign(label, GTK_ALIGN_START);
+    gtk_widget_set_margin_start(label, 10);
+    
+    entry = gtk_entry_new();
+    gtk_grid_attach(GTK_GRID(grid13), entry, 1, 2, 2, 1);
+    gtk_entry_set_placeholder_text(GTK_ENTRY(entry), "2024");
+    gtk_widget_set_hexpand(GTK_WIDGET(entry), TRUE);
+    gtk_widget_set_margin_end(GTK_WIDGET(entry), 10);
+    g_signal_connect (G_OBJECT(entry), "changed", G_CALLBACK (get_entry_text2), strCallBack13);
+
     button = gtk_button_new_with_label("Cari");
-    gtk_grid_attach(GTK_GRID(grid13), button, 1, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid13), button, 1, 3, 1, 1);
     gtk_widget_set_halign(button, GTK_ALIGN_END);
     g_signal_connect (G_OBJECT(button), "clicked", G_CALLBACK (on_button_clicked), strCallBack13);
 
     strCallBack13->labelOutput = gtk_label_new("Jadwal kontrol\t: ");
-    gtk_grid_attach(GTK_GRID(grid13), strCallBack13->labelOutput, 0, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid13), strCallBack13->labelOutput, 0, 4, 1, 1);
     gtk_widget_set_halign(strCallBack13->labelOutput, GTK_ALIGN_START);
     gtk_widget_set_margin_start(strCallBack13->labelOutput, 10);
 
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(tampilkanKontrolPasien), strCallBack13);
     g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(set_label_text), strCallBack13);
     }
 
