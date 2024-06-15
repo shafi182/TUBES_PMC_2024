@@ -7,6 +7,7 @@
 #include "reader.c"
 #include "fungsi1&2.c"
 #include "fungsi3.c"
+#include "fungsi4&5.c"
 #include "Fungsi6.c"
 #include "writer.c"
 
@@ -763,9 +764,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     strCallBack11->labelOutput = gtk_label_new("Data laporan keuangan");
     gtk_grid_attach(GTK_GRID(grid11), strCallBack11->labelOutput, 0, 2, 3, 1);
-    gtk_widget_set_hexpand(GTK_WIDGET(strCallBack11->labelOutput), TRUE);
-    gtk_widget_set_vexpand(GTK_WIDGET(strCallBack11->labelOutput), TRUE);
 
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(infoPendapatan), strCallBack11);
     g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(set_label_text), strCallBack11);
     }
 
@@ -792,9 +792,8 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     strCallBack12->labelOutput = gtk_label_new("Data riwayat medis");
     gtk_grid_attach(GTK_GRID(grid12), strCallBack12->labelOutput, 0, 2, 3, 1);
-    gtk_widget_set_hexpand(GTK_WIDGET(strCallBack12->labelOutput), TRUE);
-    gtk_widget_set_vexpand(GTK_WIDGET(strCallBack12->labelOutput), TRUE);
 
+    g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(jumlahPasiendanPenyakit), strCallBack12);
     g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(set_label_text), strCallBack12);
     }
 
