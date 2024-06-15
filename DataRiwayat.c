@@ -124,18 +124,20 @@ void tambahData(GtkWidget* widget, gpointer userData)
     dataPasienHead = newPasien;
 }
 
-void tambahRiwayat(riwayatDiagnosis** riwayatHead, const char* idPasien, const char* tanggalPeriksaStr, const char* diagnosis, const char* tindakan)
+void tambahRiwayat(GtkWidget* widget, gpointer userData)
 {
+    strCallbackData* temp = userData;
+    
     riwayatDiagnosis* newRiwayat = (riwayatDiagnosis*)malloc(sizeof(riwayatDiagnosis));
 
-    strcpy(newRiwayat->idPasien, idPasien);
-    strcpy(newRiwayat->diagnosis, diagnosis);
-    strcpy(newRiwayat->tindakan, tindakan);
+    strcpy(newRiwayat->idPasien, temp->str1);
+    strcpy(newRiwayat->diagnosis, temp->str3);
+    strcpy(newRiwayat->tindakan, temp->str4);
 
     //passing tanggal Pengecekan
 
     char tanggalPeriksaCopy[255];
-    strcpy(tanggalPeriksaCopy, tanggalPeriksaStr);
+    strcpy(tanggalPeriksaCopy, temp->str2);
     char* token = strtok(tanggalPeriksaCopy, "-");
     newRiwayat->tanggalPeriksa[0] = atoi(token);
     token = strtok(NULL, "-");
@@ -153,62 +155,68 @@ void tambahRiwayat(riwayatDiagnosis** riwayatHead, const char* idPasien, const c
     newRiwayat->tanggalKontrol[1] = tempTanggalKontrol[1];
     newRiwayat->tanggalKontrol[2] = tempTanggalKontrol[2];
 
-    int biayapasien = 140000; // Base biaya pasien
-    if (strcmp(newRiwayat->tindakan, "Vaksinasi") == 0) {
-        biayapasien += 100000;
-    } else if (strcmp(newRiwayat->tindakan, "Cek gula darah") == 0) {
-        biayapasien += 25000;
-    } else if (strcmp(newRiwayat->tindakan, "Pemasangan infus") == 0) {
-        biayapasien += 125000;
-    } else if (strcmp(newRiwayat->tindakan, "Pengobatan") == 0) {
-        biayapasien += 150000;
-    }
-    char message[255];
-    strcpy(message, "Riwayat berhasil ditambahkan");
+    //Hitung biaya
 
+    int biayapasien = biayaTindakan[0] + biayaTindakan[1]; // Base biaya pasien
+    if (strcmp(newRiwayat->tindakan, "Vaksinasi") == 0) {
+        biayapasien += biayaTindakan[2];
+    } else if (strcmp(newRiwayat->tindakan, "Cek gula darah") == 0) {
+        biayapasien += biayaTindakan[3];
+    } else if (strcmp(newRiwayat->tindakan, "Pemasangan infus") == 0) {
+        biayapasien += biayaTindakan[4];
+    } else if (strcmp(newRiwayat->tindakan, "Pengobatan") == 0) {
+        biayapasien += biayaTindakan[5];
+    }
     newRiwayat->biaya = biayapasien;
 
-    newRiwayat->next = *riwayatHead;
-    *riwayatHead = newRiwayat;
+    newRiwayat->next = riwayatDiagnosisHead;
+    riwayatDiagnosisHead = newRiwayat;
+
+    strcpy((temp->strOutput), "Riwayat berhasil ditambahkan");
 }
 
-void hapusDataPasien(dataPasien** pasienHead, riwayatDiagnosis** riwayatHead, const char* idPasien)
+void hapusDataPasien(GtkWidget* widget, gpointer userData)
 {
-    dataPasien* currentPasien = *pasienHead;
+    strCallbackData* temp = userData;
+
+    dataPasien* currentPasien = dataPasienHead;
     dataPasien* prevPasien = NULL;
-    riwayatDiagnosis* currentRiwayat = *riwayatHead;
+    riwayatDiagnosis* currentRiwayat = riwayatDiagnosisHead;
     riwayatDiagnosis* prevRiwayat = NULL;
 
     // Cari pasien berdasarkan ID
-    while (currentPasien != NULL && strcmp(currentPasien->idPasien, idPasien) != 0) {
+    while (currentPasien != NULL && strcmp(currentPasien->idPasien, temp->str1) != 0) {
         prevPasien = currentPasien;
         currentPasien = currentPasien->next;
     }
 
     // Jika pasien tidak ditemukan
     if (currentPasien == NULL) {
+        strcpy(temp->strOutput, "\nID pasien tidak ditemukan");
         return;
     }
-
     // Hapus riwayat diagnosis yang terkait dengan pasien yang akan dihapus
     while (currentRiwayat != NULL) {
-        if (strcmp(currentRiwayat->idPasien, idPasien) == 0) {
+        if (strcmp(currentRiwayat->idPasien, temp->str1) == 0) {
             if (prevRiwayat == NULL) {
-                *riwayatHead = currentRiwayat->next;
+                riwayatDiagnosisHead = currentRiwayat->next;
+                free(currentRiwayat);
+                currentRiwayat = riwayatDiagnosisHead;
             } else {
                 prevRiwayat->next = currentRiwayat->next;
+                free(currentRiwayat);
+                currentRiwayat = prevRiwayat->next;
             }
-            free(currentRiwayat);
-            currentRiwayat = prevRiwayat->next;
-        } else {
+        } 
+        else{
             prevRiwayat = currentRiwayat;
             currentRiwayat = currentRiwayat->next;
         }
     }
-
+            
     // Hapus data pasien dari linked list
     if (prevPasien == NULL) {
-        *pasienHead = currentPasien->next;
+        dataPasienHead = currentPasien->next;
     } else {
         prevPasien->next = currentPasien->next;
     }
@@ -217,160 +225,230 @@ void hapusDataPasien(dataPasien** pasienHead, riwayatDiagnosis** riwayatHead, co
     char message[255];
     strcpy(message, "Data berhasil dihapus");
 
+    strcpy(temp->strOutput, message);
 }
 
-void hapusRiwayatDiagnosis(riwayatDiagnosis** riwayatHead, const char* idPasien, const char* tanggalPeriksa)
+void hapusRiwayatDiagnosis(GtkWidget* widget, gpointer userData)
 {
-    riwayatDiagnosis* currentRiwayat = *riwayatHead;
+    strCallbackData* temp = userData;
+
+    riwayatDiagnosis* currentRiwayat = riwayatDiagnosisHead;
     riwayatDiagnosis* prevRiwayat = NULL;
 
     // Parsing tanggalPeriksa menjadi tanggal, bulan, dan tahun
     int tanggal, tahun;
     char bulan[10]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
-    sscanf(tanggalPeriksa, "%d-%9s-%d", &tanggal, bulan, &tahun);
+    char tempTanggal[255];
+    strcpy(tempTanggal, temp->str2);
+    token = strtok(tempTanggal, "-");
+    tanggal = atoi(token);
+    token = strtok(NULL, "-");
+    strcpy(bulan, token);
+    token = strtok(NULL, "-");
+    tahun = atoi(token);
+
+    printf("%d %s %d\n", tanggal, (bulan), tahun);
 
     // Cari riwayat diagnosis berdasarkan ID pasien dan tanggal periksa
+    int found = 0;
     while (currentRiwayat != NULL) {
-        if (strcmp(currentRiwayat->idPasien, idPasien) == 0 &&
+        if (strcmp(currentRiwayat->idPasien, temp->str1) == 0 &&
             currentRiwayat->tanggalPeriksa[0] == tanggal &&
             currentRiwayat->tanggalPeriksa[1] == getMonth_(bulan) &&
             currentRiwayat->tanggalPeriksa[2] == tahun) {
             // Hapus riwayat diagnosis yang sesuai
             if (prevRiwayat == NULL) {
-                *riwayatHead = currentRiwayat->next;
+                riwayatDiagnosisHead = currentRiwayat->next;
             } else {
                 prevRiwayat->next = currentRiwayat->next;
             }
             free(currentRiwayat);
 
-            ;
-            return;
+            found = 1;
+            break;
         }
         prevRiwayat = currentRiwayat;
         currentRiwayat = currentRiwayat->next;
     }
+
+    if (!found) {
+        strcpy(temp->strOutput, "Riwayat tidak ditemukan");
+        return;
+    }
     char message[255];
     strcpy(message, "Riwayat berhasil dihapus");
 
+    strcpy(temp->strOutput, message);
 }
 
-// void ubahDataPasien(dataPasien* pasienHead, const char* idPasien, const char* nama, const char* alamat, const char* kota, const char* tempatLahir, const char* tanggalLengkap, const char* noBpjs)* bulan, const char* tahun, const char* noBpjs)
-// {
-//     dataPasien* current = pasienHead;
+void ubahDataPasien(GtkWidget* widget, gpointer userData)
+{
+    strCallbackData* temp = userData;
 
-//     // Cari pasien berdasarkan ID
-//     while (current != NULL && strcmp(current->idPasien, idPasien) != 0 && ) {
-//         current = current->next;
-//     }
+    dataPasien* current = dataPasienHead;
 
-//     // Jika pasien tidak ditemukan
-//     if (current == NULL) {
-//         return;
-//     }
-
-//     // Ubah data pasien jika input bukan "-"
-//     if (strcmp(nama, "-") != 0) {
-//         strcpy(current->nama, nama);
-//     }
-//     if (strcmp(alamat, "-") != 0) {
-//         strcpy(current->alamat, alamat);
-//     }
-//     if (strcmp(kota, "-") != 0) {
-//         strcpy(current->kota, kota);
-//     }
-//     if (strcmp(tempatLahir, "-") != 0) {
-//         strcpy(current->tempatLahir, tempatLahir);
-//     }
-//     if (strcmp(tanggalLengkap, "-") != 0) {
-//         // Memisahkan tanggal, bulan, dan tahun dari string lengkap
-//         int tanggal, tahun;
-//         char bulan[10]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
-
-//         sscanf(tanggalLengkap, "%d-%9s-%d", &tanggal, bulan, &tahun);
-
-//         current->tanggalLahir[0] = tanggal;
-//         current->tanggalLahir[1] = getMonth_(bulan);
-//         current->tanggalLahir[2] = tahun;
-
-//         int tanggalLahir[3] = {current->tanggalLahir[0], current->tanggalLahir[1], current->tanggalLahir[2]};
-//         current->umur = getAge(tanggalLahir);
-//     }
-//     if (strcmp(noBpjs, "-") != 0) {
-//         strcpy(current->noBpjs, noBpjs);
-//     }
-//     char message[255];
-//     strcpy(message, "Data berhasil diubah");
-// }
-
-void ubahRiwayatDiagnosis(riwayatDiagnosis* riwayatHead, const char* idPasien, const char* tanggalLengkap, const char* diagnosis, const char* tindakan, const char* tanggalBaru, const char* IDBaru) {
-    riwayatDiagnosis* current = riwayatHead;
-
-    // Memisahkan tanggal, bulan, dan tahun dari string lengkap
-    int tanggal, tahun;
-    char bulan[20]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
-
-    sscanf(tanggalLengkap, "%d-%9s-%d", &tanggal, bulan, &tahun);
-
-    // Cari riwayat diagnosis berdasarkan ID pasien dan tanggal Pemeriksaan
-    while (current != NULL && strcmp(current->idPasien, idPasien) != 0 && current->tanggalPeriksa[0] != tanggal && current->tanggalPeriksa[1] != getMonth_(bulan) && current->tanggalPeriksa[2] != tahun) {
+    // Cari pasien berdasarkan ID
+    while (current != NULL && strcmp(current->idPasien, temp->str7) != 0) {
         current = current->next;
     }
-    // Jika riwayat diagnosis tidak ditemukan
+
+    // Jika pasien tidak ditemukan
     if (current == NULL) {
+        strcpy(temp->strOutput, "\nID pasien tidak ditemukan");
+        return;
+    }
+    // Ubah data pasien jika input bukan "-" atau " "
+    printf("nemu\n");
+    if (strcmp(temp->str1, "-") != 0) {
+        strcpy(current->nama, temp->str1);
+    }
+    if (strcmp(temp->str2, "-") != 0) {
+        strcpy(current->alamat, temp->str2);
+    }
+    if (strcmp(temp->str3, "-") != 0) {
+        printf("masuk\n");
+        strcpy(current->kota, temp->str3);
+    }
+    if (strcmp(temp->str4, "-") != 0) {
+        strcpy(current->tempatLahir, temp->str4);
+    }
+    if (strcmp(temp->str5, "-") != 0) {
+        // Memisahkan tanggal, bulan, dan tahun dari string lengkap
+        int tanggal, tahun;
+        char bulan[10]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
+        char tempTanggal[255];
+        strcpy(tempTanggal, temp->str5);
+        token = strtok(tempTanggal, "-");
+        tanggal = atoi(token);
+        token = strtok(NULL, "-");
+        strcpy(bulan, token);
+        token = strtok(NULL, "-");
+        tahun = atoi(token);
+
+        printf("%d %s %d\n", tanggal, (bulan), tahun);
+        current->tanggalLahir[0] = tanggal;
+        current->tanggalLahir[1] = getMonth_(bulan);
+        current->tanggalLahir[2] = tahun;
+
+        int tanggalLahir[3] = {current->tanggalLahir[0], current->tanggalLahir[1], current->tanggalLahir[2]};
+        current->umur = getAge(tanggalLahir);
+    }
+    if (strcmp(temp->str6, "-") != 0) {
+        strcpy(current->noBpjs, temp->str6);
+    }
+    char message[255];
+    strcpy(message, "Data berhasil diubah");
+
+    strcpy(temp->strOutput, message);
+}
+
+void ubahRiwayatDiagnosis(GtkWidget* widget, gpointer userData) {
+
+    strCallbackData* temp = userData;
+
+    riwayatDiagnosis* current = riwayatDiagnosisHead;
+
+    // Memisahkan tanggal, bulan, dan tahun dari string lengkap
+    int tanggal, bulan, tahun;
+    char tempBulan[10]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
+    char tempTanggal[255];
+    strcpy(tempTanggal, temp->str3);
+    token = strtok(tempTanggal, "-");
+    tanggal = atoi(token);
+    token = strtok(NULL, "-");
+    strcpy(tempBulan, token);
+    token = strtok(NULL, "-");
+    tahun = atoi(token);
+    bulan = getMonth_(tempBulan);
+
+    // Cari riwayat diagnosis berdasarkan ID pasien dan tanggal Pemeriksaan
+    int idFound = 0;
+    int dateFound = 0;
+    while (current != NULL){
+        if(strcmp(current->idPasien, temp->str1) == 0){
+            idFound = 1;
+            if (current->tanggalPeriksa[0] == tanggal && current->tanggalPeriksa[1] == bulan && current->tanggalPeriksa[2] == tahun) {
+                dateFound = 1;
+                break;                
+            }
+        }
+        current = current->next;
+    }
+
+    // Jika riwayat diagnosis tidak ditemukan
+    if (idFound == 0) {
+        strcpy(temp->strOutput, "\nID pasien tidak ditemukan");
+        return;
+    }
+    // printf("%s %s\n", current->idPasien, temp->str1);
+
+    if(dateFound == 0){
+        strcpy(temp->strOutput, "\nTanggal pemeriksaan tidak ditemukan");
         return;
     }
 
     // Ubah data riwayat diagnosis jika input bukan "-"
-    if (strcmp(tanggalBaru, "-") != 0) {
-    int newTanggal, newTahun;
-    char newBulan[20]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
-    sscanf(tanggalBaru, "%d-%9s-%d", &newTanggal, newBulan, &newTahun);
+    if (strcmp(temp->str4, "-") != 0) {
+        int newTanggal, newTahun;
+        char newBulan[20]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
+        strcpy(tempTanggal, temp->str4);
+        token = strtok(tempTanggal, "-");
+        newTanggal = atoi(token);
+        token = strtok(NULL, "-");
+        strcpy(newBulan, token);
+        token = strtok(NULL, "-");
+        newTahun = atoi(token);
 
-    current->tanggalPeriksa[0] = newTanggal;
-    current->tanggalPeriksa[1] = getMonth_(newBulan);
-    current->tanggalPeriksa[2] = newTahun;
-}
+        current->tanggalPeriksa[0] = newTanggal;
+        current->tanggalPeriksa[1] = getMonth_(newBulan);
+        current->tanggalPeriksa[2] = newTahun;
+    }
 
-    if (strcmp(IDBaru, "-") != 0) {
-        strcpy(current->idPasien, IDBaru);
+    if (strcmp(temp->str2, "-") != 0) {
+        strcpy(current->idPasien, temp->str2);
     }
 
 
-    if (strcmp(diagnosis, "-") != 0) {
-        strcpy(current->diagnosis, diagnosis);
+    if (strcmp(temp->str5, "-") != 0) {
+        strcpy(current->diagnosis, temp->str5);
     }
-    if (strcmp(tindakan, "-") != 0) {
-        strcpy(current->tindakan, tindakan);
+    if (strcmp(temp->str6, "-") != 0) {
+        strcpy(current->tindakan, temp->str6);
 
         // Perbarui biaya berdasarkan tindakan
-        int biayapasien = 140000; // Base biaya pasien
+        int biayapasien = biayaTindakan[0]+biayaTindakan[1]; // Base biaya pasien
         if (strcmp(current->tindakan, "Vaksinasi") == 0) {
-            biayapasien += 100000;
+            biayapasien += biayaTindakan[2];
         } else if (strcmp(current->tindakan, "Cek gula darah") == 0) {
-            biayapasien += 25000;
+            biayapasien += biayaTindakan[3];
         } else if (strcmp(current->tindakan, "Pemasangan infus") == 0) {
-            biayapasien += 125000;
+            biayapasien += biayaTindakan[4];
         } else if (strcmp(current->tindakan, "Pengobatan") == 0) {
-            biayapasien += 150000;
+            biayapasien += biayaTindakan[5];
         }
         current->biaya = biayapasien;
     }
     char message[255];
     strcpy(message, "Riwayat berhasil diubah");
+
+    strcpy(temp->strOutput, message);
 }
 
 void searchData(GtkWidget* widget, gpointer userData)
 {
-    dataPasien* current = pasienHead;
+    strCallbackData* temp = userData;
+
+    dataPasien* current = dataPasienHead;
 
     // Search for the patient by ID
-    while (current != NULL && strcmp(current->idPasien, idPasien) != 0) {
+    while (current != NULL && strcmp(current->idPasien, (temp->str1)) != 0) {
         current = current->next;
     }
 
     // If the patient is not found
     if (current == NULL) {
-        printf("Pasien dengan ID %s tidak ditemukan.\n", idPasien);
+        printf("Pasien dengan ID %s tidak ditemukan.\n", (temp->str1));
+        strcpy(temp->strOutput, "\nData Pasien tidak ditemukan");
         return;
     }
 
@@ -403,25 +481,30 @@ void searchData(GtkWidget* widget, gpointer userData)
 
     strcat(message, "\nID Pasien: ");
     strcat(message, current->idPasien);
+
+    strcpy(temp->strOutput, message);
 }
 
-void searchRiwayat(riwayatDiagnosis* riwayatHead, const char* idPasien, const char* tanggalPeriksa) {
-    riwayatDiagnosis* current = riwayatHead;
+void searchRiwayat(GtkWidget* widget, gpointer userData) {
 
-    printf("Riwayat Diagnosis untuk Pasien dengan ID %s pada Tanggal Periksa %s:\n", idPasien, tanggalPeriksa);
+    strCallbackData* temp = userData;
+
+    riwayatDiagnosis* current = riwayatDiagnosisHead;
+
+    printf("Riwayat Diagnosis untuk Pasien dengan ID %s pada Tanggal Periksa %s:\n", temp->str1, temp->str2);
 
     // Pisahkan tanggal, bulan, dan tahun dari string tanggalPeriksa
     int tanggal, tahun;
     char bulan[20]; // Untuk menyimpan bulan dalam format lengkap (misalnya "September")
-    sscanf(tanggalPeriksa, "%d-%9s-%d", &tanggal, bulan, &tahun);
+    sscanf(temp->str2, "%d-%9s-%d", &tanggal, bulan, &tahun);
 
     // Cari riwayat diagnosis berdasarkan ID pasien dan tanggal periksa
+    char totalMessage[2048] = ""; // Buffer untuk pesan
+    strcat(totalMessage, "Riwayat medis\t: \n\n");
+    int found = 0;
     while (current != NULL) {
-        if (strcmp(current->idPasien, idPasien) == 0 &&
-            current->tanggalPeriksa[0] == tanggal &&
-            current->tanggalPeriksa[1] == getMonth_(bulan) &&
-            current->tanggalPeriksa[2] == tahun) {
-
+        if (strcmp(current->idPasien, temp->str1) == 0){ 
+            found = 1;
             char message[1024] = ""; // Buffer untuk pesan
             char buffer[256];
             strcat(message, "ID Pasien: ");
@@ -444,8 +527,16 @@ void searchRiwayat(riwayatDiagnosis* riwayatHead, const char* idPasien, const ch
             sprintf(buffer, "%d", current->biaya);
             strcat(message, buffer);
 
-            strcat(message, "\n");
+            strcat(message, "\n\n");
+
+            strcat(totalMessage, message);
         }
         current = current->next;
     }
+
+    if (!found) {
+        strcpy(totalMessage, "Riwayat Pasien tidak ditemukan.\n");
+    }
+    printf("%s\n", totalMessage);
+    strcpy(temp->strOutput, totalMessage);
 }
