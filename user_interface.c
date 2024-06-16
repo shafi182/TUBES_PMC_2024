@@ -493,7 +493,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     button = gtk_button_new_with_label("Tambahkan");
     gtk_grid_attach(GTK_GRID(grid6), button, 1, 6, 1, 1);
-    gtk_widget_set_halign(button, GTK_ALIGN_END);
+    gtk_widget_set_halign(button, GTK_ALIGN_CENTER);
     g_signal_connect (G_OBJECT(button), "clicked", G_CALLBACK (on_button_clicked), strCallBack6);
 
     strCallBack6->labelOutput = gtk_label_new("Lengkapi data pasien terlebih dahulu.");
