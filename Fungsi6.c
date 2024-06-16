@@ -38,8 +38,10 @@ void tampilkanKontrolPasien(GtkWidget* widget, gpointer userData) {
     char str[10];
     char message[1024] = "";
     strcat(message, "Jadwal kontrol\t: \n");
+    int found = 0;
     while (currentDiagnosis != NULL) {
         if (currentDiagnosis->tanggalKontrol[1] == bulanInput && currentDiagnosis->tanggalKontrol[2] == tahunInput) {
+            found = 1;
             dataPasien *currentPasien = dataPasienHead;
             while (currentPasien != NULL) {
                 if (strcmp(currentPasien->idPasien, currentDiagnosis->idPasien) == 0) {
@@ -63,6 +65,12 @@ void tampilkanKontrolPasien(GtkWidget* widget, gpointer userData) {
             }
         }
         currentDiagnosis = currentDiagnosis->next;
+    }
+
+    if (!found) {
+        printf("Tidak ada jadwal kontrol pada bulan dan tahun yang diberikan.\n");
+        strcpy(temp->strOutput, "Tidak ada jadwal kontrol pada bulan dan tahun yang diberikan.\n");
+        return;
     }
 
     strcpy(temp->strOutput, message);

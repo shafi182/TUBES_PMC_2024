@@ -75,12 +75,13 @@ static void *set_label_text(GtkButton *button, gpointer user_data) {
 
 static void activate(GtkApplication *app, gpointer user_data) {
     // Inisialisasi
-    GtkWidget *window, *sidebar, *stack, *box, *header, *button, *label, *entry;
+    GtkWidget *scroll_window, *window, *sidebar, *stack, *box, *header, *button, *label, *entry;
     GtkWidget *grid1, *grid2, *grid3, *grid4, *grid5, *grid6, *grid7, *grid8, *grid9, *grid10, *grid11, *grid12, *grid13;
     GtkStackPage *page1, *page2, *page3, *page4, *page5, *page6, *page7, *page8, *page9, *page10, *page11, *page12, *page13;
 
     window = gtk_application_window_new(app);
     gtk_window_set_resizable(GTK_WINDOW(window), TRUE);
+    scroll_window = gtk_scrolled_window_new();
 
     header = gtk_header_bar_new();
     gtk_window_set_titlebar (GTK_WINDOW(window), header);
@@ -91,12 +92,13 @@ static void activate(GtkApplication *app, gpointer user_data) {
     box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     sidebar = gtk_stack_sidebar_new();
     gtk_box_append(GTK_BOX(box), sidebar);
+    gtk_box_append(GTK_BOX(box), scroll_window);
 
     stack = gtk_stack_new();
     gtk_stack_set_transition_type(GTK_STACK(stack), GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN);
     gtk_stack_sidebar_set_stack(GTK_STACK_SIDEBAR(sidebar), GTK_STACK(stack));
     gtk_widget_set_hexpand(GTK_WIDGET(stack), TRUE);
-    gtk_box_append(GTK_BOX(box), stack);
+    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(scroll_window), stack);
 
     gtk_window_set_child(GTK_WINDOW(window), box);
 
@@ -843,7 +845,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
     g_signal_connect (G_OBJECT(button), "clicked", G_CALLBACK (on_button_clicked), strCallBack13);
 
     strCallBack13->labelOutput = gtk_label_new("Jadwal kontrol\t: ");
-    gtk_grid_attach(GTK_GRID(grid13), strCallBack13->labelOutput, 0, 4, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid13), strCallBack13->labelOutput, 1, 4, 2, 1);
     gtk_widget_set_halign(strCallBack13->labelOutput, GTK_ALIGN_START);
     gtk_widget_set_margin_start(strCallBack13->labelOutput, 10);
 

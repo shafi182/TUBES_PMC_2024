@@ -14,6 +14,67 @@ typedef struct dataPenyakit{
     struct dataPenyakit* next;
 } dataPenyakit;
 
+// fungsi untuk mendapatkan bulan dalam bentuk integer dari string
+int MonthFromString(const char *bulan) {
+    if (strcmp(bulan, "Januari") == 0) return 1;
+    if (strcmp(bulan, "Februari") == 0) return 2;
+    if (strcmp(bulan, "Maret") == 0) return 3;
+    if (strcmp(bulan, "April") == 0) return 4;
+    if (strcmp(bulan, "Mei") == 0) return 5;
+    if (strcmp(bulan, "Juni") == 0) return 6;
+    if (strcmp(bulan, "Juli") == 0) return 7;
+    if (strcmp(bulan, "Agustus") == 0) return 8;
+    if (strcmp(bulan, "September") == 0) return 9;
+    if (strcmp(bulan, "Oktober") == 0) return 10;
+    if (strcmp(bulan, "November") == 0) return 11;
+    if (strcmp(bulan, "Desember") == 0) return 12;
+    return -1;  // Jika bulan tidak valid
+}
+
+
+
+// fungsi untuk membuat format rupiah
+void formatRupiah(int uang, char uangOut[255]) {
+    int uangAwal = uang;
+    char temp[255];
+    sprintf(temp, "%d", uang);
+    int len = strlen(temp);
+    int jumlahTitik = (len-1)/3;
+
+    int head;
+    if(jumlahTitik != 0){
+        int pembagi = pow(1000, jumlahTitik);
+        head = uang/(pembagi);
+        sprintf(uangOut, "%d", head);
+        uang = uang%(pembagi);
+        if(uang == 0){
+            strcat(uangOut, ".000");
+        }
+        for(i = jumlahTitik-1; i > 0; i--){
+            pembagi = pow(1000, i);
+            head = uang/(pembagi);
+            strcat(uangOut, ".");
+            sprintf(temp, "%d", head);
+            if (strlen(temp) < 3){
+                for(int j = 0; j < (3-strlen(temp)); j++){
+                    strcat(uangOut, "0");
+                }
+            }
+            strcat(uangOut, temp);
+            uang = uang%(pembagi);
+        }
+        if(uang == 0 && strlen(uangOut) != len+jumlahTitik){
+            strcat(uangOut, ".000");
+        }
+        else if(strlen(uangOut) != len+jumlahTitik){
+            strcat(uangOut, ".");
+            sprintf(temp, "%d", uang);
+            strcat(uangOut, temp);
+        }
+    }
+
+    printf("%d | %s\n", uangAwal, uangOut);
+}
 
 //Fungsi untuk mengurutkan linked list berdasarkan tahun menggunakan bubble sort
 void sortYear(riwayatDiagnosis** head_ref) 
@@ -163,7 +224,17 @@ void printLL(dataPenyakit* node, char massage[4096], char buffer[256])
 {
     while (node != NULL) 
     {
-        sprintf(buffer,"%s:%d\n", node->penyakit, node->jumlah);
+        if(strlen(node->penyakit) < 11){
+            if(strlen(node->penyakit) < 8){
+                sprintf(buffer,"%s\t\t\t: %d\n", node->penyakit, node->jumlah);
+            }
+            else{
+                sprintf(buffer,"%s\t\t: %d\n", node->penyakit, node->jumlah);
+            } 
+        }
+        else{
+            sprintf(buffer,"%s\t: %d\n", node->penyakit, node->jumlah);
+        }
         strcat(massage,buffer);
         //printf("%s:%d\n", node->penyakit, node->jumlah);
         node = node->next;
@@ -190,8 +261,8 @@ void infoPendapatan(GtkWidget* widget, gpointer userData)
     int perBulan[tahun][12]; //Menyimpan pendapatan per bulan
     char daftarBulan [12][20] = {"Januari  ", "Februari", "Maret   ", 
                                 "April   ", "Mei     ", "Juni    ", 
-                                "Juli    ", "Agustus ", "September", 
-                                "Oktober ", "November", "Desember"};
+                                "Juli    ", "Agustus", "September", 
+                                "Oktober", "November", "Desember"};
     
     int i = 0, a, b, n = 0; 
     //Variabel n menyimpan jumlah kedatangan pasien per tahun
@@ -291,26 +362,43 @@ void infoPendapatan(GtkWidget* widget, gpointer userData)
     //Mencetak pendapatan per tahun dan per bulan
     for (int j = 0; j < tahun; j++)
     {
-        sprintf(buffer, "Tahun %d :\nPasien bulanan:\n", daftarTahun[j]);
+        sprintf(buffer, "Tahun %d :\nPasien bulanan :\n", daftarTahun[j]);
         strcat(message, buffer);
         //printf("Tahun %d :\nPasien bulanan:\n", daftarTahun[j]);
         for (int k = 0; k < 12; k++)
         {
             if (perBulan[j][k] != 0)
             {
-                sprintf(buffer,"%s\t:\tRp%d\n", daftarBulan[k], perBulan[j][k]);
+                char uang[255];
+                formatRupiah(perBulan[j][k], uang);
+                if(MonthFromString(daftarBulan[k]) <= 8 || MonthFromString(daftarBulan[k]) == 10 ){
+                    sprintf(buffer,"%s\t\t\t\t: Rp%s\n", daftarBulan[k], uang);
+                }
+                else{
+                    sprintf(buffer,"%s\t\t\t: Rp%s\n", daftarBulan[k], uang);
+                }
                 strcat(message, buffer);
-                //printf("%s\t:\tRp%d\n", daftarBulan[k], perBulan[j][k]);
+                printf("%s\t: Rp%s\n", daftarBulan[k], uang);
             }
             else //Tidak ada pendapatan (bulanan)
             {
-                sprintf(buffer,"%s\t:\tRp0\n", daftarBulan[k], perBulan[j][k]);
+                if(MonthFromString(daftarBulan[k]) < 8){
+                    sprintf(buffer,"%s\t\t\t\t: Rp0\n", daftarBulan[k], perBulan[j][k]);
+                }
+                else{
+                    sprintf(buffer,"%s\t\t\t: Rp0\n", daftarBulan[k], perBulan[j][k]);
+                }
                 strcat(message, buffer);
                 //printf("%s\t:\tRp0\n", daftarBulan[k], perBulan[j][k]);
             }
         }
-        sprintf(buffer,"Total pendapatan:\tRp%d\nRata-rata pendapatan:   Rp%d\n\n", perTahun[j], avgTahun[j]);
+        char totalRupiah[255], avgRupiah[255];
+        formatRupiah(perTahun[j], totalRupiah);
+        formatRupiah(avgTahun[j], avgRupiah);
+        strcat(message,"----------------------------------------\n");
+        sprintf(buffer,"Total pendapatan\t\t: Rp%s\nRata-rata pendapatan\t: Rp%s\n", totalRupiah, avgRupiah);
         strcat(message, buffer);
+        strcat(message,"=========================\n");
         //printf("Total pendapatan:\tRp%d\nRata-rata pendapatan:   Rp%d\n\n", perTahun[j], avgTahun[j]);
     }
     strcpy(tempUI->strOutput, message);
@@ -336,8 +424,8 @@ void jumlahPasiendanPenyakit(GtkWidget* widget, gpointer userData)
     int perBulan[tahun][12]; //Menyimpan jumlah pasien per bulan
     char daftarBulan [12][25] = {"Januari  ", "Februari", "Maret   ", 
                                 "April   ", "Mei     ", "Juni    ", 
-                                "Juli    ", "Agustus ", "September", 
-                                "Oktober ", "November", "Desember"};
+                                "Juli    ", "Agustus", "September", 
+                                "Oktober", "November", "Desember"};
     
     int i = 0, a, b, n = 0;
     dataPenyakit* diagnosis[tahun][12]; //List diagnosis & jumlahnya per bulan
@@ -515,38 +603,46 @@ void jumlahPasiendanPenyakit(GtkWidget* widget, gpointer userData)
     //Mencetak jumlah pasien dan penyakit per tahun dan per bulan
     for (int j = 0; j < tahun; j++)
     {
-        sprintf(buffer,"Tahun %d :\nPasien bulanan:\n", daftarTahun[j]);
+        sprintf(buffer,"Tahun %d :\nPasien bulanan :\n", daftarTahun[j]);
         strcat(message, buffer);
         printf("Tahun %d :\nPasien bulanan:\n", daftarTahun[j]);
-        strcat(message,"--------------------------\n");
+        strcat(message,"\n");
         printf("--------------------------\n");
         for (int k = 0; k < 12; k++)
         {
             if (perBulan[j][k] != 0)
             {
-                sprintf(buffer,"%s\t:\t%d\n", daftarBulan[k], perBulan[j][k]);
+                if(MonthFromString(daftarBulan[k]) > 8 && MonthFromString(daftarBulan[k]) != 10){
+                    sprintf(buffer,"%s\t\t: %d\n", daftarBulan[k], perBulan[j][k]);
+                }
+                else{
+                    sprintf(buffer,"%s\t\t\t: %d\n", daftarBulan[k], perBulan[j][k]);
+                }
                 strcat(message, buffer);
                 printf("%s\t:\t%d\n", daftarBulan[k], perBulan[j][k]);
-                strcat(message,"Daftar diagnosis:\n");
+                strcat(message,"Daftar diagnosis :\n");
                 printf("Daftar diagnosis:\n");
                 printLL(diagnosis[j][k],message,buffer);
+                strcat(message,"--------------------------\n");
             }
             else //Tidak ada pasien (bulanan)
             {
-                sprintf(buffer,"%s\t:\t0\n", daftarBulan[k], perBulan[j][k]);
+                sprintf(buffer,"%s\t\t\t: 0\n", daftarBulan[k], perBulan[j][k]);
                 strcat(message, buffer);
                 printf("%s\t:\t0\n", daftarBulan[k]);
+                strcat(message,"--------------------------\n");
             }
             printf("--------------------------\n", k);
         }
+        strcat(message,"--------------------------\n");
         sprintf(buffer,"Total Pasien\t:\t%d\n\n", perTahun[j]);
         strcat(message, buffer);
         printf("Total Pasien\t:\t%d\n", perTahun[j]);
-        strcat(message,"Daftar diagnosis:\n");
+        strcat(message,"Daftar diagnosis :\n");
         printf("Daftar diagnosis tahun %d:\n", daftarTahun[j]);
         printLL(diagnosisPerTahun[j],message,buffer);
-        strcat(message,"\n");
-        printf("\n");
+        strcat(message,"==================\n");
+        printf("--------------------------\n");
     }
 
     strcpy(tempUI->strOutput, message);
